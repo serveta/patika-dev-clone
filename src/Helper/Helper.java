@@ -57,4 +57,18 @@ public class Helper {
 
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
+
+    public static boolean confirm(String msg) {
+        String message;
+
+        switch (msg) {
+            case "sure":
+                message = "Do you want to continue?";
+                break;
+            default:
+                message = msg;
+        }
+
+        return JOptionPane.showConfirmDialog(null, message, "Are you sure?", JOptionPane.YES_NO_OPTION) == 0;
+    }
 }

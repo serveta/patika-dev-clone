@@ -176,12 +176,14 @@ public class OperatorGUI extends JFrame {
             if (Helper.isFieldEmpty(fld_user_id)) {
                 Helper.showMessage("fill");
             } else {
-                int user_id = Integer.parseInt(fld_user_id.getText());
-                if (User.delete(user_id)) {
-                    Helper.showMessage("done");
-                    loadUserModel();
-                } else {
-                    Helper.showMessage("error");
+                if (Helper.confirm("sure")){
+                    int user_id = Integer.parseInt(fld_user_id.getText());
+                    if (User.delete(user_id)) {
+                        Helper.showMessage("done");
+                        loadUserModel();
+                    } else {
+                        Helper.showMessage("error");
+                    }
                 }
             }
         });
