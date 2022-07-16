@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Helper.*;
 import Model.Operator;
+import Model.Path;
 import Model.User;
 
 import java.util.ArrayList;
@@ -36,8 +37,13 @@ public class OperatorGUI extends JFrame {
     private JComboBox cmb_sh_type;
     private JButton btn_search;
     private JTextField fld_sh_id;
+    private JPanel pnl_path_list;
+    private JScrollPane scrl_path_list;
+    private JTable tbl_path_list;
     private DefaultTableModel mdl_user_list;
-    Object[] row_user_list;
+    private Object[] row_user_list;
+    private DefaultTableModel mdl_path_list;
+    private Object[] row_path_list;
 
     private Operator operator;
 
@@ -94,6 +100,26 @@ public class OperatorGUI extends JFrame {
             }
         });
 
+        // ## Model User List
+
+        // Model Path List
+        mdl_path_list = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0)
+                    return false;
+                return super.isCellEditable(row, column);
+            }
+        };
+        Object[] col_path_list = {"ID", "Path Name"};
+        mdl_path_list.setColumnIdentifiers(col_path_list);
+        row_path_list = new Object[col_path_list.length];
+        loadPathModel();
+        tbl_path_list.setModel((mdl_path_list));
+        tbl_path_list.getTableHeader().setReorderingAllowed(false);
+        tbl_path_list.getColumnModel().getColumn(0).setMaxWidth(75);
+        // ## Model Path List
+
         btn_add.addActionListener(e -> {
             if (Helper.isFieldEmpty(fld_name) || Helper.isFieldEmpty(fld_username) || Helper.isFieldEmpty(fld_password)) {
                 Helper.showMessage("fill");
@@ -137,12 +163,26 @@ public class OperatorGUI extends JFrame {
         });
     }
 
+    private void loadPathModel() {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_path_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        int i;
+        for (Path path : Path.getList()) {
+            i = 0;
+            row_path_list[i++] = path.getId();
+            row_path_list[i++] = path.getName();
+            mdl_path_list.addRow(row_path_list);
+        }
+    }
+
     public void loadUserModel() {
         DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_user_list.getModel();
         defaultTableModel.setRowCount(0);
 
+        int i;
         for (User user : User.getList()) {
-            int i = 0;
+            i = 0;
             row_user_list[i++] = user.getId();
             row_user_list[i++] = user.getName();
             row_user_list[i++] = user.getUsername();
