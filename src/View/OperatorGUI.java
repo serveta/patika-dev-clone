@@ -115,7 +115,7 @@ public class OperatorGUI extends JFrame {
         popup_path_list.add(deleteMenu);
 
         updateMenu.addActionListener(e -> {
-            int selectedID = Integer.parseInt(tbl_path_list.getValueAt(tbl_path_list.getSelectedRow(),0).toString());
+            int selectedID = Integer.parseInt(tbl_path_list.getValueAt(tbl_path_list.getSelectedRow(), 0).toString());
             UpdatePathGUI updatePathGUI = new UpdatePathGUI(Path.getFetch(selectedID));
             updatePathGUI.addWindowListener(new WindowAdapter() {
                 @Override
@@ -123,6 +123,18 @@ public class OperatorGUI extends JFrame {
                     loadPathModel();
                 }
             });
+        });
+
+        deleteMenu.addActionListener(e -> {
+            if (Helper.confirm("sure")) {
+                int selectedID = Integer.parseInt(tbl_path_list.getValueAt(tbl_path_list.getSelectedRow(), 0).toString());
+                if (Path.delete(selectedID)) {
+                    Helper.showMessage("done");
+                    loadPathModel();
+                } else {
+                    Helper.showMessage("error");
+                }
+            }
         });
 
         mdl_path_list = new DefaultTableModel() {
@@ -176,7 +188,7 @@ public class OperatorGUI extends JFrame {
             if (Helper.isFieldEmpty(fld_user_id)) {
                 Helper.showMessage("fill");
             } else {
-                if (Helper.confirm("sure")){
+                if (Helper.confirm("sure")) {
                     int user_id = Integer.parseInt(fld_user_id.getText());
                     if (User.delete(user_id)) {
                         Helper.showMessage("done");

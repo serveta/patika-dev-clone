@@ -116,4 +116,21 @@ public class Path {
 
         return path;
     }
+
+    public static boolean delete(int id) {
+        String query = "DELETE FROM public.path WHERE id = ?";
+
+        boolean isDelete;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            isDelete = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isDelete;
+    }
 }
