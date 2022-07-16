@@ -53,6 +53,8 @@ public class OperatorGUI extends JFrame {
     private JComboBox cmb_path;
     private JComboBox cmb_educator;
     private JButton btn_course_add;
+    private JTextField fld_course_id;
+    private JButton btn_course_delete;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
     private DefaultTableModel mdl_path_list;
@@ -199,6 +201,15 @@ public class OperatorGUI extends JFrame {
         tbl_course_list.getTableHeader().setReorderingAllowed(false);
         tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
 
+        tbl_course_list.getSelectionModel().addListSelectionListener(e -> {
+            try {
+                String selected_course_id = tbl_course_list.getValueAt(tbl_course_list.getSelectedRow(), 0).toString();
+                fld_course_id.setText(selected_course_id);
+            } catch (Exception exception) {
+
+            }
+        });
+
         loadPathComboBox();
         loadEducatorComboBox();
         // ## Model Course List
@@ -273,8 +284,25 @@ public class OperatorGUI extends JFrame {
                 if (Course.add(userItem.getKey(), pathItem.getKey(), fld_course_name.getText(), fld_programin_language.getText())){
                     Helper.showMessage("done");
                     loadCourseModel();
+                    fld_course_name.setText(null);
+                    fld_programin_language.setText(null);
                 } else {
                     Helper.showMessage("error");
+                }
+            }
+        });
+        btn_course_delete.addActionListener(e -> {
+            if (Helper.confirm("sure")) {
+                if (Helper.isFieldEmpty(fld_course_id)) {
+                    Helper.showMessage("fill");
+                } else {
+                    int userId = Integer.parseInt(fld_course_id.getText());
+                    if (Course.delete(userId)){
+                        Helper.showMessage("done");
+                        loadCourseModel();
+                    } else {
+                        Helper.showMessage("error");
+                    }
                 }
             }
         });
