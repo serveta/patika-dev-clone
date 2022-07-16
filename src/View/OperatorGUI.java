@@ -230,6 +230,7 @@ public class OperatorGUI extends JFrame {
                         Helper.showMessage("done");
                         loadUserModel();
                         loadEducatorComboBox();
+                        fld_user_id.setText(null);
                     } else {
                         Helper.showMessage("error");
                     }
