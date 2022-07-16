@@ -3,6 +3,8 @@ package View;
 import Helper.Helper;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import Helper.*;
@@ -68,6 +70,22 @@ public class OperatorGUI extends JFrame {
                 fld_user_id.setText(selected_user_id);
             } catch (Exception exception) {
 
+            }
+        });
+
+        tbl_user_list.getModel().addTableModelListener(e -> {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int user_id = Integer.parseInt(tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 0).toString());
+                String user_name = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 1).toString();
+                String username = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 2).toString();
+                String password = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 3).toString();
+                String user_type = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(), 4).toString();
+
+                if (User.update(user_id, user_name, username, password, user_type)) {
+                    Helper.showMessage("done");
+                }
+
+                loadUserModel();
             }
         });
 

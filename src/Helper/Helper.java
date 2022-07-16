@@ -46,6 +46,10 @@ public class Helper {
                 message = "Something gets wrong!";
                 title = "ERROR";
                 break;
+            case "usernameInUse":
+                message = "The username already in use. Please change your username!";
+                title = "ERROR";
+                break;
             default:
                 message = msg;
                 title = "WARNING";

@@ -98,15 +98,15 @@ public class User {
         String query = "INSERT INTO public.\"patikaUser\" (name,username,password,type) VALUES (?,?,?,?)";
         boolean isAdd;
 
-        if (User.getFetch(username) != null){
-            Helper.showMessage("The username already in use. Please change your username!");
+        if (User.getFetch(username) != null) {
+            Helper.showMessage("usernameInUse");
             isAdd = false;
         } else {
             try {
                 PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, username);
-                preparedStatement.setString(3, password);
+                preparedStatement.setString(1, name.trim());
+                preparedStatement.setString(2, username.trim());
+                preparedStatement.setString(3, password.trim());
                 preparedStatement.setString(4, type);
 
                 isAdd = preparedStatement.executeUpdate() != -1;
@@ -154,7 +154,7 @@ public class User {
 
         try {
             PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
-            preparedStatement.setInt(1,id);
+            preparedStatement.setInt(1, id);
             isDelete = preparedStatement.executeUpdate() != -1;
             preparedStatement.close();
         } catch (SQLException e) {
@@ -162,5 +162,39 @@ public class User {
         }
 
         return isDelete;
+    }
+
+    public static boolean update(int id, String name, String username, String password, String type) {
+        String query = "UPDATE public.\"patikaUser\" SET name=?, username=?, password=?, type=? WHERE id=?";
+        boolean isUpdate;
+
+        if (getFetch(username) != null && getFetch(username).getId() != id) {
+            Helper.showMessage("usernameInUse");
+            return false;
+        }
+
+        if (name.equals("") || username.equals("") || password.equals("") || type.equals("")){
+            Helper.showMessage("fill");
+            return false;
+        }
+
+        if (type.equals("operator") || type.equals("student") || type.equals("educator")) {
+            try {
+                PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+                preparedStatement.setString(1, name.trim());
+                preparedStatement.setString(2, username.trim());
+                preparedStatement.setString(3, password.trim());
+                preparedStatement.setString(4, type.trim());
+                preparedStatement.setInt(5, id);
+                isUpdate = preparedStatement.executeUpdate() != -1;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Helper.showMessage("User type cannot be " + type);
+            isUpdate = false;
+        }
+        return isUpdate;
     }
 }
