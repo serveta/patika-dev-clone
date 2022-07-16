@@ -173,7 +173,7 @@ public class User {
             return false;
         }
 
-        if (name.equals("") || username.equals("") || password.equals("") || type.equals("")){
+        if (name.equals("") || username.equals("") || password.equals("") || type.equals("")) {
             Helper.showMessage("fill");
             return false;
         }
@@ -196,5 +196,44 @@ public class User {
             isUpdate = false;
         }
         return isUpdate;
+    }
+
+    public static ArrayList<User> search(String query) {
+        ArrayList<User> userList = new ArrayList<>();
+
+        User user;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setType(resultSet.getString("type"));
+                userList.add(user);
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return userList;
+    }
+
+    public static String searchQuery(String id, String name, String username, String type) {
+        String query = "SELECT * FROM public.\"patikaUser\" WHERE id = {{id}} AND name ILIKE '%{{name}}%' AND username ILIKE '%{{username}}%' AND type LIKE '%{{type}}%'";
+        if (id.trim().length() != 0) {
+            query = query.replace("{{id}}", id);
+        } else {
+            query = query.replace("id = {{id}} AND ", "");
+        }
+        query = query.replace("{{name}}", name);
+        query = query.replace("{{username}}", username);
+        query = query.replace("{{type}}", type);
+
+        return query;
     }
 }

@@ -4,14 +4,13 @@ import Helper.Helper;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import Helper.*;
 import Model.Operator;
 import Model.User;
 
-import java.net.http.HttpRequest;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class OperatorGUI extends JFrame {
@@ -31,6 +30,12 @@ public class OperatorGUI extends JFrame {
     private JButton btn_add;
     private JTextField fld_user_id;
     private JButton btn_delete;
+    private JPanel pnl_sh;
+    private JTextField fld_sh_name;
+    private JTextField fld_sh_username;
+    private JComboBox cmb_sh_type;
+    private JButton btn_search;
+    private JTextField fld_sh_id;
     private DefaultTableModel mdl_user_list;
     Object[] row_user_list;
 
@@ -121,6 +126,15 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+
+        btn_search.addActionListener(e -> {
+            String user_id = fld_sh_id.getText();
+            String user_name = fld_sh_name.getText();
+            String user_username = fld_sh_username.getText();
+            String user_type = cmb_sh_type.getSelectedItem().toString();
+
+            loadUserModel(User.search(User.searchQuery(user_id,user_name,user_username,user_type)));
+        });
     }
 
     public void loadUserModel() {
@@ -138,6 +152,20 @@ public class OperatorGUI extends JFrame {
         }
     }
 
+    public void loadUserModel(ArrayList<User> userList) {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_user_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        for (User user : userList) {
+            int i = 0;
+            row_user_list[i++] = user.getId();
+            row_user_list[i++] = user.getName();
+            row_user_list[i++] = user.getUsername();
+            row_user_list[i++] = user.getPassword();
+            row_user_list[i++] = user.getType();
+            mdl_user_list.addRow(row_user_list);
+        }
+    }
     public static void main(String[] args) {
         Helper.setLayout();
         Operator operator1 = new Operator();
