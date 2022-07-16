@@ -122,6 +122,13 @@ public class Path {
 
         boolean isDelete;
 
+        ArrayList<Course> courseList = Course.getList();
+        for (Course course : courseList) {
+            if (course.getPath().getId() == id) {
+                Course.delete(course.getId());
+            }
+        }
+
         try {
             PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
             preparedStatement.setInt(1, id);

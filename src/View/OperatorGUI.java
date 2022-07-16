@@ -114,7 +114,7 @@ public class OperatorGUI extends JFrame {
 
                 loadEducatorComboBox();
                 loadUserModel();
-                //loadCourseModel();
+                loadCourseModel();
             }
         });
 
@@ -135,6 +135,7 @@ public class OperatorGUI extends JFrame {
                 public void windowClosed(WindowEvent e) {
                     loadPathModel();
                     loadPathComboBox();
+                    loadCourseModel();
                 }
             });
         });
@@ -146,7 +147,7 @@ public class OperatorGUI extends JFrame {
                     Helper.showMessage("done");
                     loadPathModel();
                     loadPathComboBox();
-                    //loadCourseModel();
+                    loadCourseModel();
                 } else {
                     Helper.showMessage("error");
                 }
