@@ -114,6 +114,7 @@ public class OperatorGUI extends JFrame {
 
                 loadEducatorComboBox();
                 loadUserModel();
+                //loadCourseModel();
             }
         });
 
@@ -145,6 +146,7 @@ public class OperatorGUI extends JFrame {
                     Helper.showMessage("done");
                     loadPathModel();
                     loadPathComboBox();
+                    //loadCourseModel();
                 } else {
                     Helper.showMessage("error");
                 }
@@ -230,6 +232,7 @@ public class OperatorGUI extends JFrame {
                         Helper.showMessage("done");
                         loadUserModel();
                         loadEducatorComboBox();
+                        loadCourseModel();
                         fld_user_id.setText(null);
                     } else {
                         Helper.showMessage("error");

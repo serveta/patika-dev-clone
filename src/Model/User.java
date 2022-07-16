@@ -198,10 +198,15 @@ public class User {
 
         return user;
     }
+
     public static boolean delete(int id) {
         String query = "DELETE FROM public.\"patikaUser\" WHERE id = ?";
-
         boolean isDelete;
+
+        ArrayList<Course> courseList = Course.getListByUser(id);
+        for (Course course : courseList) {
+            Course.delete(course.getId());
+        }
 
         try {
             PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
