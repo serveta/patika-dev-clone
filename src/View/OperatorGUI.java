@@ -55,6 +55,7 @@ public class OperatorGUI extends JFrame {
     private JButton btn_course_add;
     private JTextField fld_course_id;
     private JButton btn_course_delete;
+    private JButton btn_course_update;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
     private DefaultTableModel mdl_path_list;
@@ -210,6 +211,27 @@ public class OperatorGUI extends JFrame {
             }
         });
 
+        tbl_course_list.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    int course_id = Integer.parseInt(tbl_course_list.getValueAt(row, 0).toString());
+                    String course_name = tbl_course_list.getValueAt(row, 1).toString();
+                    String programing_language = tbl_course_list.getValueAt(row, 2).toString();
+                    String path = tbl_course_list.getValueAt(row, 3).toString();
+                    String educator = tbl_course_list.getValueAt(row, 4).toString();
+
+                    fld_course_name.setText(course_name);
+                    fld_programin_language.setText(programing_language);
+                    comboBoxSetSelectedItem(cmb_path, path);
+                    comboBoxSetSelectedItem(cmb_educator, educator);
+                    btn_course_update.setEnabled(true);
+                }
+            }
+        });
+
         loadPathComboBox();
         loadEducatorComboBox();
         // ## Model Course List
@@ -281,30 +303,51 @@ public class OperatorGUI extends JFrame {
             if (Helper.isFieldEmpty(fld_course_name) || Helper.isFieldEmpty(fld_programin_language)) {
                 Helper.showMessage("fill");
             } else {
-                if (Course.add(userItem.getKey(), pathItem.getKey(), fld_course_name.getText(), fld_programin_language.getText())){
+                if (Course.add(userItem.getKey(), pathItem.getKey(), fld_course_name.getText(), fld_programin_language.getText())) {
                     Helper.showMessage("done");
                     loadCourseModel();
                     fld_course_name.setText(null);
                     fld_programin_language.setText(null);
+                    btn_course_update.setEnabled(false);
                 } else {
                     Helper.showMessage("error");
                 }
             }
         });
         btn_course_delete.addActionListener(e -> {
-            if (Helper.confirm("sure")) {
-                if (Helper.isFieldEmpty(fld_course_id)) {
-                    Helper.showMessage("fill");
-                } else {
+            if (Helper.isFieldEmpty(fld_course_id)) {
+                Helper.showMessage("fill");
+            } else {
+                if (Helper.confirm("sure")) {
                     int userId = Integer.parseInt(fld_course_id.getText());
-                    if (Course.delete(userId)){
+                    if (Course.delete(userId)) {
                         Helper.showMessage("done");
                         loadCourseModel();
+                        fld_course_id.setText(null);
                     } else {
                         Helper.showMessage("error");
                     }
                 }
             }
+        });
+        btn_course_update.addActionListener(e -> {
+            Item pathItem = (Item) cmb_path.getSelectedItem();
+            Item userItem = (Item) cmb_educator.getSelectedItem();
+            if (Helper.isFieldEmpty(fld_course_name) || Helper.isFieldEmpty(fld_programin_language)) {
+                Helper.showMessage("fill");
+            } else {
+                if (Course.update(Integer.parseInt(fld_course_id.getText()), userItem.getKey(), pathItem.getKey(), fld_course_name.getText(), fld_programin_language.getText())) {
+                    Helper.showMessage("done");
+                    loadCourseModel();
+                    fld_course_id.setText(null);
+                    fld_course_name.setText(null);
+                    fld_programin_language.setText(null);
+                    btn_course_update.setEnabled(false);
+                } else {
+                    Helper.showMessage("error");
+                }
+            }
+
         });
     }
 
@@ -379,6 +422,17 @@ public class OperatorGUI extends JFrame {
         cmb_educator.removeAllItems();
         for (User user : User.getListOnlyEducator()) {
             cmb_educator.addItem(new Item(user.getId(), user.getName()));
+        }
+    }
+
+    public void comboBoxSetSelectedItem(JComboBox jComboBox, String value) {
+        Item item;
+        for (int i = 0; i < jComboBox.getItemCount(); i++) {
+            item = (Item) jComboBox.getItemAt(i);
+            if (item.getValue().equalsIgnoreCase(value)) {
+                jComboBox.setSelectedIndex(i);
+                break;
+            }
         }
     }
 

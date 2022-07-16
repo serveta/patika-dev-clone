@@ -140,16 +140,16 @@ public class Course {
         return courseList;
     }
 
-    public static boolean add(int user_id, int path_id, String name, String programing_language){
+    public static boolean add(int user_id, int path_id, String name, String programing_language) {
         String query = "INSERT INTO public.course (user_id, path_id, name, programing_language) VALUES (?,?,?,?)";
         boolean isAdd;
 
         try {
             PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
-            preparedStatement.setInt(1,user_id);
-            preparedStatement.setInt(2,path_id);
-            preparedStatement.setString(3,name);
-            preparedStatement.setString(4,programing_language);
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setInt(2, path_id);
+            preparedStatement.setString(3, name);
+            preparedStatement.setString(4, programing_language);
             isAdd = preparedStatement.executeUpdate() != -1;
             preparedStatement.close();
         } catch (SQLException e) {
@@ -174,4 +174,26 @@ public class Course {
 
         return isDelete;
     }
+
+    public static boolean update(int id, int user_id, int path_id, String name, String programing_language) {
+        String query = "UPDATE public.course SET user_id = ?, path_id = ?, name = ?, programing_language = ? WHERE id = ?";
+
+        boolean isUpdate;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setInt(2, path_id);
+            preparedStatement.setString(3, name);
+            preparedStatement.setString(4, programing_language);
+            preparedStatement.setInt(5, id);
+            isUpdate = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isUpdate;
+    }
+
 }
