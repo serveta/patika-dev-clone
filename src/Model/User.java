@@ -94,6 +94,33 @@ public class User {
         return userList;
     }
 
+    public static ArrayList<User> getListOnlyEducator() {
+        ArrayList<User> userList = new ArrayList<>();
+
+        String sql = "SELECT * FROM public.\"patikaUser\" WHERE type='educator'";
+
+        User user;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setType(resultSet.getString("type"));
+                userList.add(user);
+            }
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return userList;
+    }
+
     public static boolean add(String name, String username, String password, String type) {
         String query = "INSERT INTO public.\"patikaUser\" (name,username,password,type) VALUES (?,?,?,?)";
         boolean isAdd;

@@ -48,6 +48,11 @@ public class OperatorGUI extends JFrame {
     private JPanel onl_course_list;
     private JTable tbl_course_list;
     private JScrollPane scrl_course_list;
+    private JTextField fld_course_name;
+    private JTextField fld_programin_language;
+    private JComboBox cmb_path;
+    private JComboBox cmb_educator;
+    private JButton btn_course_add;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
     private DefaultTableModel mdl_path_list;
@@ -107,6 +112,7 @@ public class OperatorGUI extends JFrame {
                     Helper.showMessage("done");
                 }
 
+                loadEducatorComboBox();
                 loadUserModel();
             }
         });
@@ -127,6 +133,7 @@ public class OperatorGUI extends JFrame {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadPathModel();
+                    loadPathComboBox();
                 }
             });
         });
@@ -137,6 +144,7 @@ public class OperatorGUI extends JFrame {
                 if (Path.delete(selectedID)) {
                     Helper.showMessage("done");
                     loadPathModel();
+                    loadPathComboBox();
                 } else {
                     Helper.showMessage("error");
                 }
@@ -187,6 +195,9 @@ public class OperatorGUI extends JFrame {
         tbl_course_list.setModel((mdl_course_list));
         tbl_course_list.getTableHeader().setReorderingAllowed(false);
         tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
+
+        loadPathComboBox();
+        loadEducatorComboBox();
         // ## Model Course List
 
         btn_add.addActionListener(e -> {
@@ -201,6 +212,7 @@ public class OperatorGUI extends JFrame {
                 if (User.add(name, username, password, type)) {
                     Helper.showMessage("done");
                     loadUserModel();
+                    loadEducatorComboBox();
                     fld_name.setText(null);
                     fld_username.setText(null);
                     fld_password.setText(null);
@@ -217,6 +229,7 @@ public class OperatorGUI extends JFrame {
                     if (User.delete(user_id)) {
                         Helper.showMessage("done");
                         loadUserModel();
+                        loadEducatorComboBox();
                     } else {
                         Helper.showMessage("error");
                     }
@@ -239,6 +252,7 @@ public class OperatorGUI extends JFrame {
                 if (Path.add(fld_path_name.getText())) {
                     Helper.showMessage("done");
                     loadPathModel();
+                    loadPathComboBox();
                     fld_path_name.setText(null);
                 } else {
                     Helper.showMessage("error");
@@ -307,6 +321,19 @@ public class OperatorGUI extends JFrame {
         }
     }
 
+    public void loadPathComboBox() {
+        cmb_path.removeAllItems();
+        for (Path path : Path.getList()){
+            cmb_path.addItem(new Item(path.getId(),path.getName()));
+        }
+    }
+
+    public void loadEducatorComboBox() {
+        cmb_educator.removeAllItems();
+        for (User user: User.getListOnlyEducator()){
+            cmb_educator.addItem(new Item(user.getId(),user.getName()));
+        }
+    }
     public static void main(String[] args) {
         Helper.setLayout();
         Operator operator1 = new Operator();
