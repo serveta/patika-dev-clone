@@ -260,6 +260,20 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+        btn_course_add.addActionListener(e -> {
+            Item pathItem = (Item) cmb_path.getSelectedItem();
+            Item userItem = (Item) cmb_educator.getSelectedItem();
+            if (Helper.isFieldEmpty(fld_course_name) || Helper.isFieldEmpty(fld_programin_language)) {
+                Helper.showMessage("fill");
+            } else {
+                if (Course.add(userItem.getKey(), pathItem.getKey(), fld_course_name.getText(), fld_programin_language.getText())){
+                    Helper.showMessage("done");
+                    loadCourseModel();
+                } else {
+                    Helper.showMessage("error");
+                }
+            }
+        });
     }
 
     private void loadCourseModel() {
@@ -324,17 +338,18 @@ public class OperatorGUI extends JFrame {
 
     public void loadPathComboBox() {
         cmb_path.removeAllItems();
-        for (Path path : Path.getList()){
-            cmb_path.addItem(new Item(path.getId(),path.getName()));
+        for (Path path : Path.getList()) {
+            cmb_path.addItem(new Item(path.getId(), path.getName()));
         }
     }
 
     public void loadEducatorComboBox() {
         cmb_educator.removeAllItems();
-        for (User user: User.getListOnlyEducator()){
-            cmb_educator.addItem(new Item(user.getId(),user.getName()));
+        for (User user : User.getListOnlyEducator()) {
+            cmb_educator.addItem(new Item(user.getId(), user.getName()));
         }
     }
+
     public static void main(String[] args) {
         Helper.setLayout();
         Operator operator1 = new Operator();
