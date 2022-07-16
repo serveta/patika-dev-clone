@@ -7,6 +7,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
 import Helper.*;
+import Model.Course;
 import Model.Operator;
 import Model.Path;
 import Model.User;
@@ -44,11 +45,16 @@ public class OperatorGUI extends JFrame {
     private JTable tbl_path_list;
     private JTextField fld_path_name;
     private JButton btn_path_add;
+    private JPanel onl_course_list;
+    private JTable tbl_course_list;
+    private JScrollPane scrl_course_list;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
     private DefaultTableModel mdl_path_list;
     private Object[] row_path_list;
     private JPopupMenu popup_path_list;
+    private DefaultTableModel mdl_course_list;
+    private Object[] row_course_list;
 
     private Operator operator;
 
@@ -165,6 +171,24 @@ public class OperatorGUI extends JFrame {
 
         // ## Model Path List
 
+        // Model Course List
+        mdl_course_list = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0)
+                    return false;
+                return super.isCellEditable(row, column);
+            }
+        };
+        Object[] col_course_list = {"ID", "Course Name", "Programing Language", "Path", "Educator"};
+        mdl_course_list.setColumnIdentifiers(col_course_list);
+        row_course_list = new Object[col_course_list.length];
+        loadCourseModel();
+        tbl_course_list.setModel((mdl_course_list));
+        tbl_course_list.getTableHeader().setReorderingAllowed(false);
+        tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
+        // ## Model Course List
+
         btn_add.addActionListener(e -> {
             if (Helper.isFieldEmpty(fld_name) || Helper.isFieldEmpty(fld_username) || Helper.isFieldEmpty(fld_password)) {
                 Helper.showMessage("fill");
@@ -221,6 +245,22 @@ public class OperatorGUI extends JFrame {
                 }
             }
         });
+    }
+
+    private void loadCourseModel() {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_course_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        int i;
+        for (Course course : Course.getList()) {
+            i = 0;
+            row_course_list[i++] = course.getId();
+            row_course_list[i++] = course.getName();
+            row_course_list[i++] = course.getPrograming_language();
+            row_course_list[i++] = course.getPath().getName();
+            row_course_list[i++] = course.getEducator().getName();
+            mdl_course_list.addRow(row_course_list);
+        }
     }
 
     private void loadPathModel() {

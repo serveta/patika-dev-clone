@@ -147,6 +147,30 @@ public class User {
         return user;
     }
 
+    public static User getFetch(int id) {
+        User user = null;
+
+        String query = "SELECT * FROM public.\"patikaUser\" WHERE id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setType(resultSet.getString("type"));
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return user;
+    }
     public static boolean delete(int id) {
         String query = "DELETE FROM public.\"patikaUser\" WHERE id = ?";
 
