@@ -3,10 +3,14 @@ package View;
 import Helper.*;
 import Model.Content;
 import Model.Course;
+import Model.Quiz;
 import Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class EducatorGUI extends JFrame {
@@ -31,6 +35,8 @@ public class EducatorGUI extends JFrame {
     private JButton btn_quiz_update;
     private DefaultTableModel mdl_content_list;
     private Object[] row_content_list;
+    private DefaultTableModel mdl_quiz_list;
+    private Object[] row_quiz_list;
 
     private User educator;
 
@@ -56,7 +62,34 @@ public class EducatorGUI extends JFrame {
         tbl_content_list.getTableHeader().setReorderingAllowed(false);
         tbl_content_list.getColumnModel().getColumn(0).setMaxWidth(75);
 
+        tbl_content_list.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
+                    int content_id = Integer.parseInt(tbl_content_list.getValueAt(row, 0).toString());
+                    if (content_id>0) {
+                        loadQuizModel(content_id);
+                    } else {
+                        clearQuizModel();
+                    }
+                }
+            }
+        });
+
         // ## Model Content List
+
+        // Model Quiz List
+        mdl_quiz_list = new DefaultTableModel();
+        Object[] col_quiz_list = {"ID", "Content", "Question", "Answer"};
+        mdl_quiz_list.setColumnIdentifiers(col_quiz_list);
+        row_quiz_list = new Object[col_quiz_list.length];
+
+        tbl_quiz_list.setModel(mdl_quiz_list);
+        tbl_quiz_list.getTableHeader().setReorderingAllowed(false);
+        tbl_quiz_list.getColumnModel().getColumn(0).setMaxWidth(75);
+        // ## Model Quiz List
 
         cmb_courses.addActionListener(e -> {
             int course_id = 0;
@@ -72,6 +105,8 @@ public class EducatorGUI extends JFrame {
             } else {
                 clearContentModel();
             }
+
+            clearQuizModel();
         });
     }
 
@@ -91,6 +126,26 @@ public class EducatorGUI extends JFrame {
 
     private void clearContentModel() {
         DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_content_list.getModel();
+        defaultTableModel.setRowCount(0);
+    }
+
+    private void loadQuizModel(int contentID) {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_quiz_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        int i;
+        for (Quiz quiz : Quiz.getListByContentId(contentID)) {
+            i = 0;
+            row_quiz_list[i++] = quiz.getId();
+            row_quiz_list[i++] = quiz.getContent().getTitle();
+            row_quiz_list[i++] = quiz.getQuestion();
+            row_quiz_list[i++] = quiz.getAnswer();
+            mdl_quiz_list.addRow(row_quiz_list);
+        }
+    }
+
+    private void clearQuizModel() {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_quiz_list.getModel();
         defaultTableModel.setRowCount(0);
     }
 
