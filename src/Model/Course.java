@@ -196,4 +196,28 @@ public class Course {
         return isUpdate;
     }
 
+    public static Course getFetch(int courseID) {
+        String query = "SELECT * FROM public.course WHERE id = " + courseID;
+
+        Course course = null;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int user_id = resultSet.getInt("user_id");
+                int path_id = resultSet.getInt("path_id");
+                String name = resultSet.getString("name");
+                String programing_language = resultSet.getString("programing_language");
+                course = new Course(id, user_id, path_id, name, programing_language);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return course;
+    }
 }
