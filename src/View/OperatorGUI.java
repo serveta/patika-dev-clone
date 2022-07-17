@@ -349,6 +349,12 @@ public class OperatorGUI extends JFrame {
             }
 
         });
+        btn_logout.addActionListener(e -> {
+            if (Helper.confirm("logout")) {
+                dispose();
+                LoginGUI loginGUI = new LoginGUI();
+            }
+        });
     }
 
     private void loadCourseModel() {
@@ -435,14 +441,4 @@ public class OperatorGUI extends JFrame {
             }
         }
     }
-
-   /* public static void main(String[] args) {
-        Helper.setLayout();
-        Operator operator1 = new Operator();
-        operator1.setId(1);
-        operator1.setName("Servet");
-        operator1.setPassword("12345");
-        operator1.setType("operator");
-        OperatorGUI operatorGUI = new OperatorGUI(operator1);
-    } */
 }

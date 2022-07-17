@@ -65,6 +65,9 @@ public class Helper {
             case "sure":
                 message = "Do you want to continue?";
                 break;
+            case "logout":
+                message = "Are you sure you want to log out?";
+                break;
             default:
                 message = msg;
         }
