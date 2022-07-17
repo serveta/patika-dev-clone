@@ -64,9 +64,9 @@ public class OperatorGUI extends JFrame {
     private DefaultTableModel mdl_course_list;
     private Object[] row_course_list;
 
-    private Operator operator;
+    private User operator;
 
-    public OperatorGUI(Operator operator) {
+    public OperatorGUI(User operator) {
         this.operator = operator;
 
         add(wrapper);
@@ -436,7 +436,7 @@ public class OperatorGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Helper.setLayout();
         Operator operator1 = new Operator();
         operator1.setId(1);
@@ -444,5 +444,5 @@ public class OperatorGUI extends JFrame {
         operator1.setPassword("12345");
         operator1.setType("operator");
         OperatorGUI operatorGUI = new OperatorGUI(operator1);
-    }
+    } */
 }
