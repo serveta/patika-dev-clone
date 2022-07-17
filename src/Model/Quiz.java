@@ -132,13 +132,29 @@ public class Quiz {
         return isAdd;
     }
 
-    public static boolean delete(int content_id) {
+    public static boolean deleteByContentId(int contentID) {
         String query = "DELETE FROM public.quiz WHERE content_id = ?";
         boolean isDelete;
 
         try {
             PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
-            preparedStatement.setInt(1, content_id);
+            preparedStatement.setInt(1, contentID);
+            isDelete = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isDelete;
+    }
+
+    public static boolean deleteByQuizId(int quizID) {
+        String query = "DELETE FROM public.quiz WHERE id = ?";
+        boolean isDelete;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, quizID);
             isDelete = preparedStatement.executeUpdate() != -1;
             preparedStatement.close();
         } catch (SQLException e) {

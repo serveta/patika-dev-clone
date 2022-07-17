@@ -208,7 +208,7 @@ public class Content {
         }
 
         if (isDelete){
-            if(!Quiz.delete(id)){
+            if(!Quiz.deleteByContentId(id)){
                 Helper.showMessage("error");
             }
         }

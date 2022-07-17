@@ -167,8 +167,7 @@ public class EducatorGUI extends JFrame {
         });
         btn_quiz_update.addActionListener(e -> {
             try {
-                int quizID = Integer.parseInt(tbl_quiz_list.getValueAt(tbl_quiz_list.getSelectedRow(), 0).toString());
-                UpdateQuizGUI updateQuizGUI = new UpdateQuizGUI(Quiz.getFetch(quizID));
+                UpdateQuizGUI updateQuizGUI = new UpdateQuizGUI(getSelectedQuiz());
                 updateQuizGUI.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -177,6 +176,18 @@ public class EducatorGUI extends JFrame {
                 });
             } catch (Exception exception) {
                 Helper.showMessage("You have to select a quiz.");
+            }
+        });
+        btn_quiz_delete.addActionListener(e -> {
+            if (Helper.confirm("sure")) {
+                try {
+                    if (Quiz.deleteByQuizId(getSelectedQuiz().getId())) {
+                        Helper.showMessage("done");
+                        loadQuizModel(getSelectedContent().getId());
+                    }
+                } catch (Exception exception) {
+                    Helper.showMessage("You have to select a quiz!");
+                }
             }
         });
     }
@@ -241,7 +252,10 @@ public class EducatorGUI extends JFrame {
         int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
         return Content.getFetch(contentID);
     }
-
+    public Quiz getSelectedQuiz() {
+        int quizID = Integer.parseInt(tbl_quiz_list.getValueAt(tbl_quiz_list.getSelectedRow(), 0).toString());
+        return Quiz.getFetch(quizID);
+    }
     public static void main(String[] args) {
         Helper.setLayout();
         EducatorGUI educatorGUI = new EducatorGUI(new User(1, "Birce", "brce", "qqq", "educator"));
