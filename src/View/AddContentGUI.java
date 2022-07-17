@@ -17,10 +17,10 @@ public class AddContentGUI extends JFrame {
     public AddContentGUI(int courseID) {
         this.courseID = courseID;
         add(wrapper);
-        setSize(500, 500);
+        setSize(500, 275);
         setLocation(Helper.screenCenterPoint("x", getSize()), Helper.screenCenterPoint("y", getSize()));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle(Config.PROJECT_TITLE);
+        setTitle(Config.PROJECT_TITLE + " - Add New Content");
         setVisible(true);
 
         btn_content_add.addActionListener(e -> {

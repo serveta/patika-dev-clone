@@ -17,10 +17,10 @@ public class UpdateContentGUI extends JFrame{
     public UpdateContentGUI(Content content) {
         this.content = content;
         add(wrapper);
-        setSize(500, 500);
+        setSize(500, 275);
         setLocation(Helper.screenCenterPoint("x", getSize()), Helper.screenCenterPoint("y", getSize()));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle(Config.PROJECT_TITLE);
+        setTitle(Config.PROJECT_TITLE + " - Update Content");
         setVisible(true);
 
         fld_content_title.setText(getContent().getTitle());
