@@ -2,6 +2,7 @@ package Model;
 
 import Helper.DBConnector;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -87,5 +88,21 @@ public class Quiz {
         }
 
         return quizList;
+    }
+
+    public static boolean delete(int content_id) {
+        String query = "DELETE FROM public.quiz WHERE content_id = ?";
+        boolean isDelete;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, content_id);
+            isDelete = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isDelete;
     }
 }

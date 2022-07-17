@@ -1,6 +1,7 @@
 package Model;
 
 import Helper.DBConnector;
+import Helper.Helper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -191,5 +192,27 @@ public class Content {
         }
 
         return isUpdate;
+    }
+
+    public static boolean delete(int id) {
+        String query = "DELETE FROM public.content WHERE id = ?";
+        boolean isDelete;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            isDelete = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (isDelete){
+            if(!Quiz.delete(id)){
+                Helper.showMessage("error");
+            }
+        }
+
+        return isDelete;
     }
 }

@@ -103,7 +103,7 @@ public class EducatorGUI extends JFrame {
             clearQuizModel();
         });
         btn_content_add.addActionListener(e -> {
-            if(comboBoxCourseGetSelectedIDOfItem() != -1) {
+            if (comboBoxCourseGetSelectedIDOfItem() != -1) {
                 AddContentGUI addContentGUI = new AddContentGUI(comboBoxCourseGetSelectedIDOfItem());
                 addContentGUI.addWindowListener(new WindowAdapter() {
                     @Override
@@ -135,6 +135,17 @@ public class EducatorGUI extends JFrame {
 
         });
         btn_content_delete.addActionListener(e -> {
+            if (Helper.confirm("sure")) {
+                try {
+                    if (Content.delete(getSelectedContent().getId())) {
+                        Helper.showMessage("done");
+                        loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                        clearQuizModel();
+                    }
+                } catch (Exception exception) {
+                    Helper.showMessage("You have to select a content!");
+                }
+            }
 
         });
     }
@@ -194,10 +205,12 @@ public class EducatorGUI extends JFrame {
         }
         return -1;
     }
+
     public Content getSelectedContent() {
         int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
         return Content.getFetch(contentID);
     }
+
     public static void main(String[] args) {
         Helper.setLayout();
         EducatorGUI educatorGUI = new EducatorGUI(new User(1, "Birce", "brce", "qqq", "educator"));
