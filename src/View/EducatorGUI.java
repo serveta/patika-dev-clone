@@ -11,7 +11,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class EducatorGUI extends JFrame {
     private JPanel wrapper;
@@ -43,7 +44,7 @@ public class EducatorGUI extends JFrame {
     public EducatorGUI(User educator) {
         this.educator = educator;
         add(wrapper);
-        setSize(1000, 1000);
+        setSize(1100, 1000);
         setLocation(Helper.screenCenterPoint("x", getSize()), Helper.screenCenterPoint("y", getSize()));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(Config.PROJECT_TITLE);
@@ -69,7 +70,7 @@ public class EducatorGUI extends JFrame {
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 1 && table.getSelectedRow() != -1) {
                     int content_id = Integer.parseInt(tbl_content_list.getValueAt(row, 0).toString());
-                    if (content_id>0) {
+                    if (content_id > 0) {
                         loadQuizModel(content_id);
                     } else {
                         clearQuizModel();
@@ -92,21 +93,25 @@ public class EducatorGUI extends JFrame {
         // ## Model Quiz List
 
         cmb_courses.addActionListener(e -> {
-            int course_id = 0;
-            for (Course course : Course.getListByUser(educator.getId())) {
-                if (course.getName().equals(cmb_courses.getModel().getSelectedItem())) {
-                    course_id = course.getId();
-                    break;
-                }
-            }
+            int course_id = comboBoxCourseGetSelectedIDOfItem();
 
-            if (course_id > 0){
+
+            if (course_id > 0) {
                 loadContentModel(course_id);
             } else {
                 clearContentModel();
             }
 
             clearQuizModel();
+        });
+        btn_content_add.addActionListener(e -> {
+            AddContentGUI addContentGUI = new AddContentGUI(comboBoxCourseGetSelectedIDOfItem());
+            addContentGUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                }
+            });
         });
     }
 
@@ -155,6 +160,15 @@ public class EducatorGUI extends JFrame {
         for (Course course : Course.getListByUser(educator.getId())) {
             cmb_courses.addItem(course.getName());
         }
+    }
+
+    public int comboBoxCourseGetSelectedIDOfItem() {
+        for (Course course : Course.getListByUser(educator.getId())) {
+            if (course.getName().equals(cmb_courses.getModel().getSelectedItem())) {
+                return course.getId();
+            }
+        }
+        return 0;
     }
 
     public static void main(String[] args) {

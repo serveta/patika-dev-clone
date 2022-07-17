@@ -2,6 +2,7 @@ package Model;
 
 import Helper.DBConnector;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -152,5 +153,24 @@ public class Content {
         }
 
         return content;
+    }
+
+    public static boolean add(int course_id, String title, String link, String description) {
+        String query = "INSERT INTO public.content (course_id, title, link, description) VALUES (?,?,?,?)";
+        boolean isAdd;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, course_id);
+            preparedStatement.setString(2, title);
+            preparedStatement.setString(3, link);
+            preparedStatement.setString(4, description);
+            isAdd = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isAdd;
     }
 }

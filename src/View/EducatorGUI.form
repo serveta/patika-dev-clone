@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="wrapper" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="920" height="451"/>
+      <xy x="20" y="20" width="1201" height="451"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -113,7 +113,7 @@
                 </constraints>
                 <properties>
                   <font size="16"/>
-                  <text value="Content of Course"/>
+                  <text value="Content of the selected course"/>
                 </properties>
               </component>
               <hspacer id="9ca37">
@@ -161,7 +161,7 @@
                 </constraints>
                 <properties>
                   <font size="16"/>
-                  <text value="Quiz of Content"/>
+                  <text value="Quiz questions of the selected content "/>
                 </properties>
               </component>
               <hspacer id="8ab48">
