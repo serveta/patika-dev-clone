@@ -212,6 +212,12 @@ public class EducatorGUI extends JFrame {
                 Helper.showMessage("Please select a content.");
             }
         });
+        btn_logout.addActionListener(e -> {
+            if (Helper.confirm("logout")){
+                dispose();
+                LoginGUI loginGUI = new LoginGUI();
+            }
+        });
     }
 
     private void loadContentModel(int courseID) {
@@ -307,10 +313,5 @@ public class EducatorGUI extends JFrame {
     public Quiz getSelectedQuiz() {
         int quizID = Integer.parseInt(tbl_quiz_list.getValueAt(tbl_quiz_list.getSelectedRow(), 0).toString());
         return Quiz.getFetch(quizID);
-    }
-
-    public static void main(String[] args) {
-        Helper.setLayout();
-        EducatorGUI educatorGUI = new EducatorGUI(new User(1, "Birce", "brce", "qqq", "educator"));
     }
 }
