@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.spec.ECField;
 
 public class EducatorGUI extends JFrame {
     private JPanel wrapper;
@@ -102,25 +103,39 @@ public class EducatorGUI extends JFrame {
             clearQuizModel();
         });
         btn_content_add.addActionListener(e -> {
-            AddContentGUI addContentGUI = new AddContentGUI(comboBoxCourseGetSelectedIDOfItem());
-            addContentGUI.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loadContentModel(comboBoxCourseGetSelectedIDOfItem());
-                }
-            });
+            if(comboBoxCourseGetSelectedIDOfItem() != -1) {
+                AddContentGUI addContentGUI = new AddContentGUI(comboBoxCourseGetSelectedIDOfItem());
+                addContentGUI.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                    }
+                });
+            } else {
+                Helper.showMessage("You have to select a course!");
+            }
         });
         btn_content_update.addActionListener(e -> {
-            int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
-            Content content = Content.getFetch(contentID);
-            UpdateContentGUI updateContentGUI = new UpdateContentGUI(content);
-            updateContentGUI.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loadContentModel(comboBoxCourseGetSelectedIDOfItem());
-                    loadQuizModel(contentID);
-                }
-            });
+            try {
+                UpdateContentGUI updateContentGUI = new UpdateContentGUI(getSelectedContent());
+                updateContentGUI.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                        try {
+                            loadQuizModel(getSelectedContent().getId());
+                        } catch (Exception exception) {
+
+                        }
+                    }
+                });
+            } catch (Exception exception) {
+                Helper.showMessage("You have to select a content!");
+            }
+
+        });
+        btn_content_delete.addActionListener(e -> {
+
         });
     }
 
@@ -177,9 +192,12 @@ public class EducatorGUI extends JFrame {
                 return course.getId();
             }
         }
-        return 0;
+        return -1;
     }
-
+    public Content getSelectedContent() {
+        int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
+        return Content.getFetch(contentID);
+    }
     public static void main(String[] args) {
         Helper.setLayout();
         EducatorGUI educatorGUI = new EducatorGUI(new User(1, "Birce", "brce", "qqq", "educator"));
