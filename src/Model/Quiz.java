@@ -90,6 +90,30 @@ public class Quiz {
         return quizList;
     }
 
+    public static Quiz getFetch(int quizID) {
+        String query = "SELECT * FROM public.quiz WHERE id = " + quizID;
+
+        Quiz quiz = null;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int content_id = resultSet.getInt("content_id");
+                String question = resultSet.getString("question");
+                String answer = resultSet.getString("answer");
+                quiz = new Quiz(id, content_id, question, answer);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return quiz;
+    }
+
     public static boolean add(int content_id, String question, String answer) {
         String query = "INSERT INTO public.quiz (content_id, question, answer) VALUES (?,?,?)";
         boolean isAdd;
@@ -122,5 +146,23 @@ public class Quiz {
         }
 
         return isDelete;
+    }
+
+    public static boolean update(int id, String question, String answer) {
+        String query = "UPDATE public.quiz SET question = ?, answer = ? WHERE id = ?";
+        boolean isUpdate;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setString(1, question);
+            preparedStatement.setString(2, answer);
+            preparedStatement.setInt(3, id);
+            isUpdate = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isUpdate;
     }
 }
