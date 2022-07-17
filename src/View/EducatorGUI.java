@@ -9,10 +9,7 @@ import Model.User;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 public class EducatorGUI extends JFrame {
     private JPanel wrapper;
@@ -110,6 +107,18 @@ public class EducatorGUI extends JFrame {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                }
+            });
+        });
+        btn_content_update.addActionListener(e -> {
+            int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
+            Content content = Content.getFetch(contentID);
+            UpdateContentGUI updateContentGUI = new UpdateContentGUI(content);
+            updateContentGUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadContentModel(comboBoxCourseGetSelectedIDOfItem());
+                    loadQuizModel(contentID);
                 }
             });
         });

@@ -131,7 +131,7 @@ public class Content {
     }
 
     public static Content getFetch(int contentID) {
-        String query = "SELECT * FROM public.content WHERE course_id = " + contentID;
+        String query = "SELECT * FROM public.content WHERE id = " + contentID;
 
         Content content = null;
 
@@ -172,5 +172,24 @@ public class Content {
         }
 
         return isAdd;
+    }
+
+    public static boolean update(int id, String title, String link, String description) {
+        String query = "UPDATE public.content SET title = ?, link = ?, description = ? WHERE id = ?";
+        boolean isUpdate;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, link);
+            preparedStatement.setString(3, description);
+            preparedStatement.setInt(4, id);
+            isUpdate = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isUpdate;
     }
 }
