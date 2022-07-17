@@ -148,6 +148,23 @@ public class EducatorGUI extends JFrame {
             }
 
         });
+        btn_quiz_add.addActionListener(e -> {
+            Content content = null;
+            try {
+                content = getSelectedContent();
+            } catch (Exception exception) {
+                Helper.showMessage("You have to select a content!");
+            }
+            if (content != null) {
+                AddQuizGUI addQuizGUI = new AddQuizGUI(content.getId());
+                addQuizGUI.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        loadQuizModel(getSelectedContent().getId());
+                    }
+                });
+            }
+        });
     }
 
     private void loadContentModel(int courseID) {

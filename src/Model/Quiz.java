@@ -90,6 +90,24 @@ public class Quiz {
         return quizList;
     }
 
+    public static boolean add(int content_id, String question, String answer) {
+        String query = "INSERT INTO public.quiz (content_id, question, answer) VALUES (?,?,?)";
+        boolean isAdd;
+
+        try {
+            PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+            preparedStatement.setInt(1, content_id);
+            preparedStatement.setString(2, question);
+            preparedStatement.setString(3, answer);
+            isAdd = preparedStatement.executeUpdate() != -1;
+            preparedStatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isAdd;
+    }
+
     public static boolean delete(int content_id) {
         String query = "DELETE FROM public.quiz WHERE content_id = ?";
         boolean isDelete;
