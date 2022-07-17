@@ -90,6 +90,33 @@ public class Quiz {
         return quizList;
     }
 
+    public static ArrayList<Quiz> getListByContentIdAndQuestion(int contentID, String questionSearch) {
+        ArrayList<Quiz> quizList = new ArrayList<>();
+
+        String query = "SELECT * FROM public.quiz WHERE content_id = " + contentID + " AND question ILIKE '%" + questionSearch + "%'";
+
+        Quiz quiz;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int content_id = resultSet.getInt("content_id");
+                String question = resultSet.getString("question");
+                String answer = resultSet.getString("answer");
+                quiz = new Quiz(id, content_id, question, answer);
+                quizList.add(quiz);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return quizList;
+    }
+
     public static Quiz getFetch(int quizID) {
         String query = "SELECT * FROM public.quiz WHERE id = " + quizID;
 

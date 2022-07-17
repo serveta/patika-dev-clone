@@ -131,6 +131,34 @@ public class Content {
         return contentList;
     }
 
+    public static ArrayList<Content> getListByTitle(int courseId, String searchTitle) {
+        ArrayList<Content> contentList = new ArrayList<>();
+
+        String query = "SELECT * FROM public.content WHERE course_id = " + courseId + " AND title ILIKE '%" + searchTitle + "%'";
+
+        Content content;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int course_id = resultSet.getInt("course_id");
+                String title = resultSet.getString("title");
+                String link = resultSet.getString("link");
+                String description = resultSet.getString("description");
+                content = new Content(id, course_id, title, link, description);
+                contentList.add(content);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return contentList;
+    }
+
     public static Content getFetch(int contentID) {
         String query = "SELECT * FROM public.content WHERE id = " + contentID;
 
@@ -207,8 +235,8 @@ public class Content {
             throw new RuntimeException(e);
         }
 
-        if (isDelete){
-            if(!Quiz.deleteByContentId(id)){
+        if (isDelete) {
+            if (!Quiz.deleteByContentId(id)) {
                 Helper.showMessage("error");
             }
         }

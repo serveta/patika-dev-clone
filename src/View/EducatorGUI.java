@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.spec.ECField;
+import java.util.ArrayList;
 
 public class EducatorGUI extends JFrame {
     private JPanel wrapper;
@@ -32,6 +32,12 @@ public class EducatorGUI extends JFrame {
     private JTable tbl_quiz_list;
     private JButton btn_quiz_add;
     private JButton btn_quiz_update;
+    private JPanel pnl_sh_content;
+    private JTextField fld_sh_content;
+    private JButton btn_sh_content;
+    private JPanel pnl_sh_quiz;
+    private JTextField fld_sh_quiz;
+    private JButton btn_sh_quiz;
     private DefaultTableModel mdl_content_list;
     private Object[] row_content_list;
     private DefaultTableModel mdl_quiz_list;
@@ -190,6 +196,22 @@ public class EducatorGUI extends JFrame {
                 }
             }
         });
+        btn_sh_content.addActionListener(e -> {
+            if (cmb_courses.getSelectedIndex() > 0) {
+                loadContentModel(Content.getListByTitle(comboBoxCourseGetSelectedIDOfItem(), fld_sh_content.getText()));
+            } else {
+                Helper.showMessage("Please select a course.");
+            }
+        });
+        btn_sh_quiz.addActionListener(e -> {
+            try {
+                if (getSelectedContent().getId() != -1) {
+                    loadQuizModel(Quiz.getListByContentIdAndQuestion(getSelectedContent().getId(), fld_sh_quiz.getText()));
+                }
+            } catch (Exception exception) {
+                Helper.showMessage("Please select a content.");
+            }
+        });
     }
 
     private void loadContentModel(int courseID) {
@@ -198,6 +220,20 @@ public class EducatorGUI extends JFrame {
 
         int i;
         for (Content content : Content.getListByCourseId(courseID)) {
+            i = 0;
+            row_content_list[i++] = content.getId();
+            row_content_list[i++] = content.getCourse().getName();
+            row_content_list[i++] = content.getTitle();
+            mdl_content_list.addRow(row_content_list);
+        }
+    }
+
+    private void loadContentModel(ArrayList<Content> contentSearch) {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_content_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        int i;
+        for (Content content : contentSearch) {
             i = 0;
             row_content_list[i++] = content.getId();
             row_content_list[i++] = content.getCourse().getName();
@@ -217,6 +253,21 @@ public class EducatorGUI extends JFrame {
 
         int i;
         for (Quiz quiz : Quiz.getListByContentId(contentID)) {
+            i = 0;
+            row_quiz_list[i++] = quiz.getId();
+            row_quiz_list[i++] = quiz.getContent().getTitle();
+            row_quiz_list[i++] = quiz.getQuestion();
+            row_quiz_list[i++] = quiz.getAnswer();
+            mdl_quiz_list.addRow(row_quiz_list);
+        }
+    }
+
+    private void loadQuizModel(ArrayList<Quiz> quizSearch) {
+        DefaultTableModel defaultTableModel = (DefaultTableModel) tbl_quiz_list.getModel();
+        defaultTableModel.setRowCount(0);
+
+        int i;
+        for (Quiz quiz : quizSearch) {
             i = 0;
             row_quiz_list[i++] = quiz.getId();
             row_quiz_list[i++] = quiz.getContent().getTitle();
@@ -252,10 +303,12 @@ public class EducatorGUI extends JFrame {
         int contentID = Integer.parseInt(tbl_content_list.getValueAt(tbl_content_list.getSelectedRow(), 0).toString());
         return Content.getFetch(contentID);
     }
+
     public Quiz getSelectedQuiz() {
         int quizID = Integer.parseInt(tbl_quiz_list.getValueAt(tbl_quiz_list.getSelectedRow(), 0).toString());
         return Quiz.getFetch(quizID);
     }
+
     public static void main(String[] args) {
         Helper.setLayout();
         EducatorGUI educatorGUI = new EducatorGUI(new User(1, "Birce", "brce", "qqq", "educator"));
