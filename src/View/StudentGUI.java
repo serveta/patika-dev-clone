@@ -50,7 +50,6 @@ public class StudentGUI extends JFrame {
         }
 
 
-
         cmb_my_path.addActionListener(e -> {
             if (cmb_my_path.getSelectedIndex() > 0) {
                 ComboBoxMyCourseAddItem();
@@ -77,6 +76,17 @@ public class StudentGUI extends JFrame {
             }
         });
 
+        btn_join.addActionListener(e -> {
+            if (cmb_path.getSelectedIndex() > 0 && cmb_course.getSelectedIndex() > 0) {
+                if (StudentCourse.add(student.getId(),String.valueOf(cmb_path.getSelectedItem()), String.valueOf(cmb_course.getSelectedItem()))){
+                    Helper.showMessage("done");
+                } else {
+                    Helper.showMessage("You have already join in this course.");
+                }
+            } else {
+                Helper.showMessage("fill");
+            }
+        });
     }
 
     private void ComboBoxMyPathAddItem() {
@@ -108,6 +118,7 @@ public class StudentGUI extends JFrame {
             cmb_path.addItem(pathName.getName());
         }
     }
+
     private void ComboBoxCourseAddItem() {
         cmb_course.removeAllItems();
         cmb_course.addItem("Choose a course...");

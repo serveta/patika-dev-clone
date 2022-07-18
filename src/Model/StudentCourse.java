@@ -1,8 +1,11 @@
 package Model;
 
 import Helper.DBConnector;
+import Helper.Helper;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.SortedMap;
@@ -120,5 +123,43 @@ public class StudentCourse {
         return contentTitleList;
     }
 
-    // Add kısmında eğer kullanıcı aynı kursa sahipse kontrolü olmalı
+
+    public static boolean add(int userId, String path, String course) {
+        String isThereQuery = "SELECT COUNT(*) FROM public.student_course " +
+                "WHERE user_id = "+userId+" AND " +
+                "path_id = (SELECT id FROM public.path WHERE name = '"+path+"') AND " +
+                "course_id = (SELECT id FROM public.course WHERE name = '"+course+"')";
+
+
+
+        String pathIdQuery = "(SELECT id FROM public.path WHERE name = '" + path + "')";
+        String courseIdQuery = "(SELECT id FROM public.course WHERE name = '" + course + "')";
+        String query = "INSERT INTO public.student_course (user_id,path_id,course_id) VALUES (?,"+pathIdQuery+","+courseIdQuery+")";
+        boolean isAdd;
+
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(isThereQuery);
+            if (resultSet.next()){
+                if(resultSet.getInt("count")>0){
+                    isAdd = false;
+                } else {
+                    PreparedStatement preparedStatement = DBConnector.getInstance().prepareStatement(query);
+                    preparedStatement.setInt(1, userId);
+                    isAdd = preparedStatement.executeUpdate() != -1;
+                    preparedStatement.close();
+                }
+            } else {
+                isAdd = false;
+            }
+
+            statement.close();
+            resultSet.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return isAdd;
+    }
 }
