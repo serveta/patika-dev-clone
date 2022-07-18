@@ -91,21 +91,20 @@ public class Comment {
         return isAdd;
     }
 
-    public static ArrayList<String[]> getCommentsOfContent(int contentId) {
-        ArrayList<String[]> commentList = new ArrayList<>();
+    public static ArrayList<String> getCommentsOfContent(int contentId) {
+        ArrayList<String> commentList = new ArrayList<>();
         String query = "SELECT public.\"patikaUser\".name, public.comment.comment " +
                 "FROM public.comment " +
                 "LEFT JOIN public.\"patikaUser\" ON public.\"patikaUser\".id = public.comment.user_id " +
                 "WHERE content_id = " + contentId;
 
-        String[] comment = new String[2];
+        String comment = "";
 
         try {
             Statement statement = DBConnector.getInstance().createStatement();
             ResultSet resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
-                comment[0] = resultSet.getString("name");
-                comment[1] = resultSet.getString("comment");
+                comment = resultSet.getString("name") + ": " + resultSet.getString("comment");
                 commentList.add(comment);
             }
             resultSet.close();

@@ -62,8 +62,7 @@ public class ContentGUI extends JFrame {
 
     private void getCommentModel() {
         commentModel.removeAllElements();
-        for (String[] str : Comment.getCommentsOfContent(content.getId())){
-            Object comment = str[0]+": "+str[1];
+        for (String comment : Comment.getCommentsOfContent(content.getId())){
             commentModel.addElement(comment);
         }
     }
