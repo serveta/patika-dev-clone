@@ -77,6 +77,7 @@ public class StudentGUI extends JFrame {
             if (cmb_path.getSelectedIndex() > 0 && cmb_course.getSelectedIndex() > 0) {
                 if (StudentCourse.add(student.getId(), String.valueOf(cmb_path.getSelectedItem()), String.valueOf(cmb_course.getSelectedItem()))) {
                     Helper.showMessage("done");
+                    ComboBoxMyPathAddItem();
                 } else {
                     Helper.showMessage("You have already join in this course.");
                 }
