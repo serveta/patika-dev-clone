@@ -141,6 +141,26 @@ public class Quiz {
         return quiz;
     }
 
+    public static String getAnswer(int contentId, String whichQuestion) {
+        String query = "SELECT answer FROM public.quiz WHERE content_id = " + contentId + " AND question = '" + whichQuestion + "'";
+
+        String answer = "";
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                answer = resultSet.getString("answer");
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return answer;
+    }
+
     public static boolean add(int content_id, String question, String answer) {
         String query = "INSERT INTO public.quiz (content_id, question, answer) VALUES (?,?,?)";
         boolean isAdd;

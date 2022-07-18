@@ -5,6 +5,8 @@ import Model.Content;
 import Model.User;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ContentGUI extends JFrame {
     private JPanel wrapper;
@@ -36,5 +38,8 @@ public class ContentGUI extends JFrame {
         fld_link.setText(content.getLink());
         txt_description.setText(content.getDescription());
 
+        btn_quiz.addActionListener(e -> {
+            QuizGUI quizGUI = new QuizGUI(content);
+        });
     }
 }
