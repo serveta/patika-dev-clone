@@ -3,7 +3,9 @@ package View;
 import Helper.*;
 import Model.Course;
 import Model.Path;
+import Model.StudentCourse;
 import Model.User;
+import com.sun.source.tree.IfTree;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -30,19 +32,93 @@ public class StudentGUI extends JFrame {
     public StudentGUI(User student) {
         this.student = student;
         add(wrapper);
-        setSize(500, 350);
+        setSize(600, 350);
         setLocation(Helper.screenCenterPoint("x", getSize()), Helper.screenCenterPoint("y", getSize()));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle(Config.PROJECT_TITLE);
         setVisible(true);
 
         lbl_welcome.setText("Welcome, " + student.getName());
+        cmb_my_course.addItem("You didn't select a path yet.");
+        cmb_my_content.addItem("You didn't select a course yet.");
+        ComboBoxPathAddItem();
 
+        if (StudentCourse.getMyPathName(this.student.getId()).size() > 0) {
+            ComboBoxMyPathAddItem();
+        } else {
+            cmb_my_path.addItem("You don't have any path yet.");
+        }
+
+
+
+        cmb_my_path.addActionListener(e -> {
+            if (cmb_my_path.getSelectedIndex() > 0) {
+                ComboBoxMyCourseAddItem();
+            } else {
+                cmb_my_course.removeAllItems();
+                cmb_my_course.addItem("You didn't select a path yet.");
+            }
+        });
+        cmb_my_course.addActionListener(e -> {
+            if (cmb_my_path.getSelectedIndex() > 0 && cmb_my_course.getSelectedIndex() > -1) {
+                ComboBoxMyContentAddItem();
+            } else {
+                cmb_my_content.removeAllItems();
+                cmb_my_content.addItem("You didn't select a course yet.");
+            }
+        });
+
+        cmb_path.addActionListener(e -> {
+            if (cmb_path.getSelectedIndex() > 0) {
+                ComboBoxCourseAddItem();
+            } else {
+                cmb_course.removeAllItems();
+                cmb_course.addItem("You didn't select a path yet.");
+            }
+        });
+
+    }
+
+    private void ComboBoxMyPathAddItem() {
+        cmb_my_path.removeAllItems();
+        cmb_my_path.addItem("Choose a path...");
+        for (String pathName : StudentCourse.getMyPathName(student.getId())) {
+            cmb_my_path.addItem(pathName);
+        }
+    }
+
+    private void ComboBoxMyCourseAddItem() {
+        cmb_my_course.removeAllItems();
+        for (String courseName : StudentCourse.getMyCourseName(student.getId(), String.valueOf(cmb_my_path.getSelectedItem()))) {
+            cmb_my_course.addItem(courseName);
+        }
+    }
+
+    private void ComboBoxMyContentAddItem() {
+        cmb_my_content.removeAllItems();
+        for (String contentName : StudentCourse.getMyContentTitle(student.getId(), String.valueOf(cmb_my_course.getSelectedItem()))) {
+            cmb_my_content.addItem(contentName);
+        }
+    }
+
+    private void ComboBoxPathAddItem() {
+        cmb_path.removeAllItems();
+        cmb_path.addItem("Choose a path...");
+        for (Path pathName : Path.getList()) {
+            cmb_path.addItem(pathName.getName());
+        }
+    }
+    private void ComboBoxCourseAddItem() {
+        cmb_course.removeAllItems();
+        cmb_course.addItem("Choose a course...");
+        for (Course courseName : Course.getList(String.valueOf(cmb_path.getSelectedItem()))) {
+            cmb_course.addItem(courseName.getName());
+        }
     }
 
     public static void main(String[] args) {
         Helper.setLayout();
-        User student = new User(1,"servet","sea","123","student");
+        User student = new User(1, "servet", "sea", "123", "student");
         StudentGUI studentGUI = new StudentGUI(student);
     }
 }

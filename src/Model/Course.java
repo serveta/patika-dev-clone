@@ -112,6 +112,35 @@ public class Course {
         return courseList;
     }
 
+    public static ArrayList<Course> getList(String selectedPath) {
+        ArrayList<Course> courseList = new ArrayList<>();
+
+        String sql = "SELECT * FROM public.course " +
+                "WHERE path_id = (SELECT id FROM public.path WHERE name = '"+selectedPath+"' )";
+
+        Course course;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int user_id = resultSet.getInt("user_id");
+                int path_id = resultSet.getInt("path_id");
+                String name = resultSet.getString("name");
+                String programing_language = resultSet.getString("programing_language");
+                course = new Course(id, user_id, path_id, name, programing_language);
+                courseList.add(course);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return courseList;
+    }
+
     public static ArrayList<Course> getListByUser(int userId) {
         ArrayList<Course> courseList = new ArrayList<>();
 
