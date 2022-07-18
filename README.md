@@ -1,5 +1,5 @@
 # patika-dev-clone
-This project is patika.dev website clone with Java Swing GUI project provided by [patika.dev](https://app.patika.dev/courses/java101/bitirme-mayin-tarlasi)
+This project is patika.dev website clone with Java Swing GUI project provided by [patika.dev](https://app.patika.dev/courses/java-102/patikaklon-8)
 
 ## Used on this project
 * Java Swing GUI
