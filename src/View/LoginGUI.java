@@ -12,13 +12,14 @@ public class LoginGUI extends JFrame {
     private JTextField fld_username;
     private JTextField fld_password;
     private JButton btn_login;
+    private JButton btn_register;
 
     public LoginGUI(){
         add(wrapper);
         setSize(420,420);
         setLocation(Helper.screenCenterPoint("x",getSize()),Helper.screenCenterPoint("y",getSize()));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle(Config.PROJECT_TITLE);
+        setTitle(Config.PROJECT_TITLE + " | Login");
         setResizable(false);
         setVisible(true);
 
@@ -44,6 +45,9 @@ public class LoginGUI extends JFrame {
                     dispose();
                 }
             }
+        });
+        btn_register.addActionListener(e -> {
+            RegisterGUI registerGUI = new RegisterGUI();
         });
     }
 
