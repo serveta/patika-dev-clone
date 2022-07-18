@@ -1,9 +1,13 @@
 package View;
 
 import Helper.*;
+import Model.Comment;
 import Model.Content;
+import Model.User;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CommentGUI extends JFrame {
     private JPanel wrapper;
@@ -11,9 +15,11 @@ public class CommentGUI extends JFrame {
     private JButton btn_comment_send;
 
     private Content content;
+    private User user;
 
-    public CommentGUI(Content content) {
+    public CommentGUI(Content content, User user) {
         this.content = content;
+        this.user = user;
 
         add(wrapper);
         setSize(270, 175);
@@ -23,6 +29,16 @@ public class CommentGUI extends JFrame {
         setVisible(true);
 
 
+        btn_comment_send.addActionListener(e -> {
+            if (txt_comment.getText().length() > 0){
+                if(Comment.add(content.getId(),user.getId(),txt_comment.getText())){
+                    Helper.showMessage("done");
+                    dispose();
+                }
+            } else {
+                Helper.showMessage("fill");
+            }
+        });
     }
 
     }

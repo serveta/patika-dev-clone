@@ -42,7 +42,7 @@ public class ContentGUI extends JFrame {
             QuizGUI quizGUI = new QuizGUI(content);
         });
         writeACommentButton.addActionListener(e -> {
-            CommentGUI commentGUI = new CommentGUI(content);
+            CommentGUI commentGUI = new CommentGUI(content, student);
         });
     }
 }
