@@ -1,10 +1,7 @@
 package View;
 
 import Helper.*;
-import Model.Course;
-import Model.Path;
-import Model.StudentCourse;
-import Model.User;
+import Model.*;
 import com.sun.source.tree.IfTree;
 
 import javax.swing.*;
@@ -78,13 +75,20 @@ public class StudentGUI extends JFrame {
 
         btn_join.addActionListener(e -> {
             if (cmb_path.getSelectedIndex() > 0 && cmb_course.getSelectedIndex() > 0) {
-                if (StudentCourse.add(student.getId(),String.valueOf(cmb_path.getSelectedItem()), String.valueOf(cmb_course.getSelectedItem()))){
+                if (StudentCourse.add(student.getId(), String.valueOf(cmb_path.getSelectedItem()), String.valueOf(cmb_course.getSelectedItem()))) {
                     Helper.showMessage("done");
                 } else {
                     Helper.showMessage("You have already join in this course.");
                 }
             } else {
                 Helper.showMessage("fill");
+            }
+        });
+        btn_open.addActionListener(e -> {
+            if (cmb_my_path.getSelectedIndex() > 0 && cmb_my_course.getSelectedIndex() > -1 && cmb_my_content.getSelectedIndex() > -1) {
+                ContentGUI contentGUI = new ContentGUI(student, Content.getFetch(String.valueOf(cmb_my_content.getSelectedItem())));
+            } else {
+                Helper.showMessage("You have to select a content.");
             }
         });
     }

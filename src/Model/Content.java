@@ -184,6 +184,31 @@ public class Content {
         return content;
     }
 
+    public static Content getFetch(String contentTitle) {
+        String query = "SELECT * FROM public.content WHERE title = '" + contentTitle + "'";
+
+        Content content = null;
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int course_id = resultSet.getInt("course_id");
+                String title = resultSet.getString("title");
+                String link = resultSet.getString("link");
+                String description = resultSet.getString("description");
+                content = new Content(id, course_id, title, link, description);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return content;
+    }
+
     public static boolean add(int course_id, String title, String link, String description) {
         String query = "INSERT INTO public.content (course_id, title, link, description) VALUES (?,?,?,?)";
         boolean isAdd;
