@@ -91,6 +91,10 @@ public class StudentGUI extends JFrame {
                 Helper.showMessage("You have to select a content.");
             }
         });
+        btn_logout.addActionListener(e -> {
+            LoginGUI loginGUI = new LoginGUI();
+            dispose();
+        });
     }
 
     private void ComboBoxMyPathAddItem() {
@@ -129,11 +133,5 @@ public class StudentGUI extends JFrame {
         for (Course courseName : Course.getList(String.valueOf(cmb_path.getSelectedItem()))) {
             cmb_course.addItem(courseName.getName());
         }
-    }
-
-    public static void main(String[] args) {
-        Helper.setLayout();
-        User student = new User(1, "servet", "sea", "123", "student");
-        StudentGUI studentGUI = new StudentGUI(student);
     }
 }
