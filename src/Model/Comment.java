@@ -3,7 +3,10 @@ package Model;
 import Helper.DBConnector;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Comment {
     private int id;
@@ -86,5 +89,31 @@ public class Comment {
         }
 
         return isAdd;
+    }
+
+    public static ArrayList<String[]> getCommentsOfContent(int contentId) {
+        ArrayList<String[]> commentList = new ArrayList<>();
+        String query = "SELECT public.\"patikaUser\".name, public.comment.comment " +
+                "FROM public.comment " +
+                "LEFT JOIN public.\"patikaUser\" ON public.\"patikaUser\".id = public.comment.user_id " +
+                "WHERE content_id = " + contentId;
+
+        String[] comment = new String[2];
+
+        try {
+            Statement statement = DBConnector.getInstance().createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                comment[0] = resultSet.getString("name");
+                comment[1] = resultSet.getString("comment");
+                commentList.add(comment);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return commentList;
     }
 }
